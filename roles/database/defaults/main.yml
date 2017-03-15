@@ -1,0 +1,5 @@
+debian:
+    version: jessie
+mariadb:
+    series_version: '10.0'
+
