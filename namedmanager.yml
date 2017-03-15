@@ -1,0 +1,17 @@
+- hosts: DNS
+  become: "{{ sudo | default('yes') }}"
+  roles:
+    - common
+    - bind
+    - database
+    - apache2
+  vars:
+    # common
+    common_ipv4_forward: 1
+    common_ssh_port: 2400
+    # variabili per ruolo common
+    users:
+      - name: michele
+        authorized:
+          - ./keys/michele.pub
+
