@@ -1,0 +1,6 @@
+---
+# defaults variables for bind
+nameserver: 'ns.nnxx'
+hostmaster: 'admin.nnxx'
+reverse_zone: 'db.10.27'
+reverse_ip: '6.0'

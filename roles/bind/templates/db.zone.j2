@@ -1,0 +1,16 @@
+$TTL    1h
+@       IN      SOA     {{ nameserver }}. {{ hostmaster }}. (
+                  3       ; Serial
+             604800     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800 )   ; Negative Cache TTL
+;
+; name servers - NS records
+     IN      NS      {{ nameserver }}
+
+; name servers - A records
+{{ nameserver }}.          IN      A       {{ ansible_default_ipv4.address }}
+
+; 10.27.0.0/16 - A records
+{{ inventory_hostname }}.        IN      A      {{ ansible_default_ipv4.address }}
