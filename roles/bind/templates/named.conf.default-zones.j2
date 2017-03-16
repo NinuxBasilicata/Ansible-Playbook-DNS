@@ -27,13 +27,13 @@ zone "255.in-addr.arpa" {
         file "/etc/bind/db.255";
 };
 
-zone "nnxx" {
+zone "{{ tld }}" {
         type master;
-        file "/etc/bind/db.nnxx";
+        file "/etc/bind/db.{{ tld }}";
 };
 
-zone "27.10.in-addr.arpa" {
+zone "{{ ansible_default_ipv4.address.split('.')[1] }}.{{ ansible_default_ipv4.address.split('.')[0] }}.in-addr.arpa" {
         type master;
-	notify no;
-        file "/etc/bind/{{ reverse_zone }}";
+        notify no;
+	file "/etc/bind/db.{{ ansible_default_ipv4.address.split('.')[0] }}.{{ ansible_default_ipv4.address.split('.')[1] }}";
 };

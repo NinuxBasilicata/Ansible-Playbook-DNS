@@ -1,14 +1,21 @@
 $TTL    1h
-@       IN      SOA     {{ nameserver }}. {{ hostmaster  }}. (
+@       IN      SOA     {{ inventory_hostname }}. {{ hostmaster  }}. (
                               3         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
+
+
 ; name servers
-      IN      NS      {{ nameserver }}.
+{% for hostname, dnsattr in nameservers_hosts.iteritems() %}
+      IN      NS     {{ hostname }}.{{ tld }}.
+{% endfor %}
+
 
 ; PTR Records
-{{ reverse_ip }}     IN      PTR     {{ nameserver }}.                       ; {{ ansible_default_ipv4.address }}
+{% for hostname, dnsattr in nameservers_hosts.iteritems() %}
+{{ dnsattr.ip.split('.')[-1] }}.{{ dnsattr.ip.split('.')[-2] }} IN  PTR {{ hostname }}.{{ tld }}.  ;{{ dnsattr.ip }}
+{% endfor %}
 
 
