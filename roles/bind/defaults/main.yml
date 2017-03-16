@@ -1,6 +1,14 @@
 ---
 # defaults variables for bind
-nameserver: 'ns.nnxx'
+tld: 'nnxx'
 hostmaster: 'admin.nnxx'
-reverse_zone: 'db.10.27'
-reverse_ip: '6.0'
+#reverse_zone: 'db.10.27'
+#reverse_arpa: '27.10.in-addr.arpa'
+
+nameservers_hosts:
+  ns1:
+    ip: '10.27.0.120'
+
+
+
+# {{ ansible_default_ipv4.address }}
