@@ -8,7 +8,7 @@
 - name: #2. create zone reverse /16
   template:
     src: db.rev.j2
-    dest: /etc/bind/{{ reverse_zone }}
+    dest: /etc/bind/db.{{ ansible_default_ipv4.address.split('.')[0] }}.{{ ansible_default_ipv4.address.split('.')[1] }}
     owner: root
     group: bind
     mode: 0664
@@ -16,7 +16,7 @@
 - name: #3. create zone TLD nnxx
   template:
     src: db.zone.j2
-    dest: /etc/bind/db.nnxx
+    dest: /etc/bind/db.{{ tld }}
     owner: root
     group: bind
     mode: 0664
