@@ -1,2 +1,2 @@
 [DNS]
-banana.nnxx ansible_user=michele ansible_port=2400
+test.nnxx ansible_user=michele ansible_port=2400 ansible_host=10.27.0.120
