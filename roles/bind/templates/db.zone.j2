@@ -15,7 +15,7 @@ $TTL    1h
 
 ; name servers - A records
 {% for hostname, dnsattr in nameservers_hosts.iteritems() %}
-{{ hostname }}.           IN       A      {{ dnsattr.ip }}
+{{ hostname }}.{{ tld }}.           IN       A      {{ dnsattr.ip }}
 {% endfor %}
 
 
