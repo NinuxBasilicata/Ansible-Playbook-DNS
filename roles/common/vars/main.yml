@@ -21,3 +21,4 @@ packages:
   - build-essential
   - linux-source
   - apt-transport-https
+  - python-mysqldb
