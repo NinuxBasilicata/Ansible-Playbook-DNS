@@ -1,0 +1,824 @@
+--
+-- Inital database NamedManager.
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `cloud_zone_map`
+--
+
+CREATE TABLE IF NOT EXISTS `cloud_zone_map` (
+`id` int(10) unsigned NOT NULL,
+  `id_name_server` int(10) unsigned NOT NULL,
+  `id_domain` int(10) unsigned NOT NULL,
+  `id_mapped` varchar(255) NOT NULL DEFAULT '',
+  `soa_serial` bigint(20) NOT NULL,
+  `delegated_ns` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `config`
+--
+
+CREATE TABLE IF NOT EXISTS `config` (
+  `name` varchar(255) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `config`
+--
+
+INSERT INTO `config` (`name`, `value`) VALUES
+('ADMIN_API_KEY', '{{ api_auth_key }}'),
+('APP_MYSQL_DUMP', '/usr/bin/mysqldump'),
+('APP_PDFLATEX', '/usr/bin/pdflatex'),
+('AUTH_METHOD', 'ldaponly'),
+('AUTH_PERMS_CACHE', 'enabled'),
+('BLACKLIST_ENABLE', 'enabled'),
+('BLACKLIST_LIMIT', '10'),
+('DATA_STORAGE_LOCATION', 'use_database'),
+('DATA_STORAGE_METHOD', 'database'),
+('DATEFORMAT', 'yyyy-mm-dd'),
+('DEFAULT_HOSTMASTER', ''),
+('DEFAULT_TTL_MX', '120'),
+('DEFAULT_TTL_NS', '86400'),
+('DEFAULT_TTL_OTHER', '120'),
+('DEFAULT_TTL_SOA', '86400'),
+('FEATURE_LOGS_API', '1'),
+('FEATURE_LOGS_AUDIT', '1'),
+('FEATURE_LOGS_ENABLE', '1'),
+('LANGUAGE_DEFAULT', 'en_us'),
+('LANGUAGE_LOAD', 'preload'),
+('LOG_RETENTION_CHECKTIME', '0'),
+('LOG_RETENTION_PERIOD', '0'),
+('LOG_UPDATE_INTERVAL', '5'),
+('PAGINATION_DOMAIN_RECORDS', '25'),
+('PATH_TMPDIR', '/tmp'),
+('PHONE_HOME', 'disabled'),
+('PHONE_HOME_TIMER', '0'),
+('SCHEMA_VERSION', '20150416'),
+('SUBSCRIPTION_ID', '0'),
+('SUBSCRIPTION_SUPPORT', 'opensource'),
+('SYNC_STATUS_CONFIG', ''),
+('TIMEZONE_DEFAULT', 'SYSTEM'),
+('UPLOAD_MAXBYTES', '5242880'),
+('ZONE_DB_HOST', 'disabled'),
+('ZONE_DB_NAME', 'disabled'),
+('ZONE_DB_PASSWORD', 'disabled'),
+('ZONE_DB_TYPE', 'disabled'),
+('ZONE_DB_USERNAME', 'disabled');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `dns_domains`
+--
+
+CREATE TABLE IF NOT EXISTS `dns_domains` (
+`id` int(10) unsigned NOT NULL,
+  `domain_name` varchar(255) NOT NULL,
+  `domain_description` text NOT NULL,
+  `soa_hostmaster` varchar(255) NOT NULL DEFAULT '',
+  `soa_serial` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `soa_refresh` int(10) unsigned NOT NULL DEFAULT '0',
+  `soa_retry` int(10) unsigned NOT NULL DEFAULT '0',
+  `soa_expire` int(10) unsigned NOT NULL DEFAULT '0',
+  `soa_default_ttl` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `dns_domains_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `dns_domains_groups` (
+`id` int(10) unsigned NOT NULL,
+  `id_domain` int(10) unsigned NOT NULL,
+  `id_group` int(10) unsigned NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `dns_records`
+--
+
+CREATE TABLE IF NOT EXISTS `dns_records` (
+`id` int(11) unsigned NOT NULL,
+  `id_domain` int(11) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `type` varchar(6) NOT NULL DEFAULT '',
+  `content` varchar(255) NOT NULL DEFAULT '',
+  `ttl` int(11) NOT NULL DEFAULT '3600',
+  `prio` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `dns_record_types`
+--
+
+CREATE TABLE IF NOT EXISTS `dns_record_types` (
+`id` int(10) unsigned NOT NULL,
+  `type` varchar(6) NOT NULL,
+  `user_selectable` tinyint(1) NOT NULL DEFAULT '0',
+  `is_standard` tinyint(1) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `dns_record_types`
+--
+
+INSERT INTO `dns_record_types` (`id`, `type`, `user_selectable`, `is_standard`) VALUES
+(1, 'SOA', 0, 0),
+(2, 'NS', 0, 0),
+(3, 'MX', 0, 0),
+(4, 'A', 1, 1),
+(5, 'AAAA', 1, 1),
+(6, 'PTR', 1, 0),
+(7, 'CNAME', 1, 1),
+(8, 'SRV', 1, 1),
+(9, 'SPF', 1, 1),
+(10, 'TXT', 1, 1),
+(11, 'SSHFP', 1, 1),
+(12, 'HINFO', 1, 1),
+(13, 'LOC', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `file_uploads`
+--
+
+CREATE TABLE IF NOT EXISTS `file_uploads` (
+`id` int(11) NOT NULL,
+  `customid` int(11) NOT NULL DEFAULT '0',
+  `type` varchar(20) NOT NULL,
+  `timestamp` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `file_name` varchar(255) NOT NULL,
+  `file_size` varchar(255) NOT NULL,
+  `file_location` char(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `file_upload_data`
+--
+
+CREATE TABLE IF NOT EXISTS `file_upload_data` (
+`id` int(11) NOT NULL,
+  `fileid` int(11) NOT NULL DEFAULT '0',
+  `data` blob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table for use as database-backed file storage system';
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `journal`
+--
+
+CREATE TABLE IF NOT EXISTS `journal` (
+`id` int(11) NOT NULL,
+  `locked` tinyint(1) NOT NULL DEFAULT '0',
+  `journalname` varchar(50) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `customid` int(11) NOT NULL DEFAULT '0',
+  `timestamp` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `content` text NOT NULL,
+  `title` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `language`
+--
+
+CREATE TABLE IF NOT EXISTS `language` (
+`id` int(11) NOT NULL,
+  `language` varchar(20) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `translation` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=433 DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `language`
+--
+
+INSERT INTO `language` (`id`, `language`, `label`, `translation`) VALUES
+(292, 'en_us', 'username_namedmanager', 'Username'),
+(293, 'en_us', 'password_namedmanager', 'Password'),
+(294, 'en_us', 'powerdns_mysql', 'PowerDNS-compliant MySQL Database (unstable, alpha feature)'),
+(295, 'en_us', 'domain_records_ns_help', 'The following is a list of all the nameservers that this domain is managed by.\r\n\r\nThese are auto-populated with the domains configured in the DB, however you can add your own records if you wish to sub-delegate the domain (for example, setting internal.example.com to be handled by another name server)'),
+(296, 'en_us', 'domain_records_mx_help', 'Configure all the mailservers for the system here, remember that all mail will be delivered to the server with the lowest priority by default.'),
+(297, 'en_us', 'domain_records_custom_help', 'Configure all remaining records here - select the type from the dropdown and enter the suitable values'),
+(298, 'en_us', 'zone_internal', 'Use internal application SQL database'),
+(299, 'en_us', 'server_primary_option_help', 'Make this server the primary one used for DNS SOA records.'),
+(300, 'en_us', 'menu_configuration', 'Configuration'),
+(301, 'en_us', 'menu_servers', 'Name Servers'),
+(302, 'en_us', 'menu_servers_view', 'View Name Servers'),
+(303, 'en_us', 'menu_servers_add', 'Add Name Server'),
+(304, 'en_us', 'menu_domains', 'Domains/Zones'),
+(305, 'en_us', 'menu_domains_view', 'View Domains'),
+(306, 'en_us', 'menu_domains_add', 'Add Domain'),
+(307, 'en_us', 'menu_overview', 'Overview'),
+(308, 'en_us', 'menu_logs', 'Changelog'),
+(309, 'en_us', 'tbl_lnk_details', 'details'),
+(310, 'en_us', 'tbl_lnk_records', 'domain records'),
+(311, 'en_us', 'tbl_lnk_delete', 'delete'),
+(312, 'en_us', 'tbl_lnk_delete', 'delete'),
+(313, 'en_us', 'tbl_lnk_logs', 'logs'),
+(314, 'en_us', 'domain_name', 'Domain Name'),
+(315, 'en_us', 'domain_serial', 'Domain Serial'),
+(316, 'en_us', 'domain_description', 'Description'),
+(317, 'en_us', 'domain_details', 'Domain Details'),
+(318, 'en_us', 'domain_soa', 'Start of Authority Record'),
+(319, 'en_us', 'soa_hostmaster', 'Email Administrator Address'),
+(320, 'en_us', 'soa_serial', 'Domain Serial'),
+(321, 'en_us', 'soa_refresh', 'Refresh Timer'),
+(322, 'en_us', 'soa_retry', 'Refresh Retry Timeout'),
+(323, 'en_us', 'soa_expire', 'Expiry Timer'),
+(324, 'en_us', 'soa_default_ttl', 'Default Record TTL'),
+(325, 'en_us', 'submit', 'Save Changes'),
+(326, 'en_us', 'domain_records_ns', 'Nameserver Configuration'),
+(327, 'en_us', 'domain_records_mx', 'Mailserver Configuration'),
+(328, 'en_us', 'domain_records_custom', 'Host Records Configuration'),
+(329, 'en_us', 'record_type', 'Type'),
+(330, 'en_us', 'record_ttl', 'TTL'),
+(331, 'en_us', 'record_name', 'Name'),
+(332, 'en_us', 'record_content', 'Content'),
+(333, 'en_us', 'record_prio', 'Priority'),
+(334, 'en_us', 'server_primary', 'Primary Nameserver'),
+(335, 'en_us', 'server_name', 'Name Server FQDN'),
+(336, 'en_us', 'server_description', 'Description'),
+(337, 'en_us', 'server_type', 'Server Type'),
+(338, 'en_us', 'sync_status', 'Sync Status'),
+(339, 'en_us', 'server_details', 'Server Details'),
+(340, 'en_us', 'api_auth_key', 'API Authentication Key'),
+(341, 'en_us', 'server_status', 'Server Status'),
+(342, 'en_us', 'sync_status_config', 'Configuration Status'),
+(343, 'en_us', 'help_api_auth_key', 'Authentication key to enable bind configuration generation script to talk back to NamedManager.'),
+(344, 'en_us', 'sync_status_log', 'Logging Status'),
+(345, 'en_us', 'api', 'API (supports Bind)'),
+(346, 'en_us', 'config_zone_defaults', 'Zone Configuration Defaults'),
+(347, 'en_us', 'config_zone_database', 'Zone Database Defaults'),
+(348, 'en_us', 'config_dateandtime', 'Date and Time Configuration'),
+(349, 'en_us', 'timestamp', 'Timestamp'),
+(350, 'en_us', 'username', 'Username'),
+(351, 'en_us', 'log_type', 'Log Type'),
+(352, 'en_us', 'log_contents', 'Log Contents'),
+(353, 'en_us', 'filter_searchbox', 'Search'),
+(354, 'en_us', 'filter_num_logs_rows', 'Maximum Log Lines'),
+(355, 'en_us', 'filter_id_server_name', 'Name Server'),
+(356, 'en_us', 'filter_id_domain', 'Domain Name'),
+(357, 'en_us', 'help_ipv4_autofill', 'Automatically create PTR records for all the IPs in the domain, with the specified domain name suffix.'),
+(358, 'en_us', 'ipv4_help', 'Note'),
+(359, 'en_us', 'help_ipv4_help', 'This interface allows you to setup a reverse DNS record for a /24 network range, by specifying the network address and optionally a domain for the PTR records if you want all the IP-DNS mapping created automatically.'),
+(360, 'en_us', 'domain_standard', 'Standard Domain'),
+(361, 'en_us', 'domain_reverse_ipv4', 'Reverse Domain (IPv4)'),
+(362, 'en_us', 'domain_type', 'Domain Type'),
+(363, 'en_us', 'ipv4_network', 'IPv4 Network Address'),
+(364, 'en_us', 'ipv4_autofill', 'Autofill IPs'),
+(365, 'en_us', 'ipv4_autofill_domain', 'Autofill IPs with domain'),
+(366, 'en_us', 'reverse_ptr', 'Reverse PTR'),
+(367, 'en_us', 'file_bind_8', 'Bind 8/9 Compatible Zonefile'),
+(368, 'en_us', 'menu_domains_import', 'Import Domain'),
+(369, 'en_us', 'records_not_imported', 'Warning: No records were imported into the application!'),
+(370, 'en_us', 'record_import_guide', 'All the records that have been processed by NamedManager from the uploaded zonefile are displayed below. Double-check that everything appears correctly - there may be some records that need adjusting, or some that are no longer required (eg old NS records).\n\nYou can check/uncheck the import button to include/exclude records from the import process if they are no longer desired.'),
+(371, 'en_us', 'domain_delete', 'Delete Domain'),
+(372, 'en_us', 'delete_confirm', 'Confirm Deletion'),
+(373, 'en_us', 'config_api', 'API Configuration'),
+(374, 'en_us', 'config_miscellaneous', 'Miscellaneous Configuration'),
+(375, 'en_us', 'domain_records', 'Domain Records'),
+(376, 'en_us', 'record_header_type', 'Type'),
+(377, 'en_us', 'record_header_ttl', 'TTL'),
+(378, 'en_us', 'record_header_prio', 'Priority'),
+(379, 'en_us', 'record_header_name', 'Name/Origin'),
+(380, 'en_us', 'record_header_content', 'Content/Record'),
+(381, 'en_us', 'record_header_import', 'Import Record?'),
+(382, 'en_us', 'record_origin', 'Name/Origin'),
+(383, 'en_us', 'unmatched_import', 'Unmatched Records'),
+(384, 'en_us', 'import_notice_unmatched_rows', 'Not all records were imported successfully, please review the unmatched lines below - if they are desired, you can adjust the format in the file before upload or create the domain and then add these missed records manually'),
+(385, 'en_us', 'import_notice_no_unmatched_rows', 'All records in the zone file have been identified and imported into the array above. :-)'),
+(386, 'en_us', 'upload', 'Upload'),
+(387, 'en_us', 'import_upload_type', 'Import Source'),
+(388, 'en_us', 'import_upload_file', 'Zone File'),
+(389, 'en_us', 'help_admin_api_key', 'Key used to authenticate Nameserver-located scripts.'),
+(390, 'en_us', 'unmatched_import_help', 'Zonefile import is not always perfect, especially when importing from human-written text zone files. If there are any records that couldn''t be matched, they will appear below for manual handling.'),
+(391, 'en_us', 'server_record', 'Use as NS Record'),
+(392, 'en_us', 'server_record_option_help', 'Adds this name server to all domains as a public NS record.'),
+(393, 'en_us', 'ipv4_autofill_forward', 'Create Forward Record'),
+(394, 'en_us', 'help_ipv4_autofill_forward', 'Automatically creates forward records for each IP in the specified domain.'),
+(395, 'en_us', 'sync_status_zones', 'Zonefile Status'),
+(396, 'en_us', 'ipv4_autofill_reverse_from_forward', 'Create Records From Existing'),
+(397, 'en_us', 'help_ipv4_autofill_reverse_from_forward', 'Automatically find any existing A records for the IP range being added and set the reverse records to them where possible.'),
+(398, 'en_us', 'help_domain_group_selection', 'Select the group or groups that this domain belongs to - groups allow domains to be located on specific sets of name servers which is useful for segregation purposes (eg internal vs external name servers).'),
+(399, 'en_us', 'config_logging', 'Logging Configuration'),
+(400, 'en_us', 'domain_groups', 'Domain Server Groups'),
+(401, 'en_us', 'server_group', 'Server Group'),
+(402, 'en_us', 'menu_servers_groups', 'Manage Server Groups'),
+(403, 'en_us', 'menu_servers_groups_view', 'View Groups'),
+(404, 'en_us', 'menu_servers_groups_add', 'Add Group'),
+(405, 'en_us', 'group_name', 'Name'),
+(406, 'en_us', 'group_description', 'Description'),
+(407, 'en_us', 'group_members', 'Server Group Members'),
+(408, 'en_us', 'group_details', 'Server Group Details'),
+(409, 'en_us', 'group_member_servers', 'Member Name Servers'),
+(410, 'en_us', 'group_member_domains', 'Member Domains'),
+(411, 'en_us', 'group_delete', 'Delete Group'),
+(412, 'en_us', 'server_domains', 'Server Domain Settings'),
+(413, 'en_us', 'realname', 'Real Name'),
+(414, 'en_us', 'contact_email', 'Contact Email'),
+(415, 'en_us', 'lastlogin_time', 'Last Login Time'),
+(416, 'en_us', 'lastlogin_ipaddress', 'Last Login Location'),
+(417, 'en_us', 'tbl_lnk_permissions', 'permissions'),
+(418, 'en_us', 'user_permissions', 'User Permissions'),
+(419, 'en_us', 'id_user', 'User ID'),
+(420, 'en_us', 'user_view', 'User Details'),
+(421, 'en_us', 'user_password', 'User Password'),
+(422, 'en_us', 'user_info', 'User Details'),
+(423, 'en_us', 'user_options', 'User Options'),
+(424, 'en_us', 'user_delete', 'Delete User'),
+(425, 'en_us', 'menu_admin_users', 'User Management'),
+(426, 'en_us', 'domain_reverse_ipv6', 'Reverse Domain (IPv6)'),
+(427, 'en_us', 'ipv6_network', 'IPv6 Network Range'),
+(428, 'en_us', 'ipv6_help', 'Note'),
+(429, 'en_us', 'help_ipv6_help', 'This interface allows you to setup a reverse DNS record for an IPv6 network range, by specifying the range along with a CIDR value. '),
+(430, 'en_us', 'id_group', 'Nameserver Group'),
+(431, 'en_us', 'config_amberstats', 'Assist the developers!'),
+(432, 'en_us', 'config_hosted', 'Hosted Cloud DNS Services');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `language_avaliable`
+--
+
+CREATE TABLE IF NOT EXISTS `language_avaliable` (
+`id` int(11) NOT NULL,
+  `name` varchar(5) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `language_avaliable`
+--
+
+INSERT INTO `language_avaliable` (`id`, `name`) VALUES
+(1, 'en_us');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `logs`
+--
+
+CREATE TABLE IF NOT EXISTS `logs` (
+`id` int(11) NOT NULL,
+  `id_server` int(11) NOT NULL DEFAULT '0',
+  `id_domain` int(11) NOT NULL DEFAULT '0',
+  `username` varchar(255) NOT NULL DEFAULT '',
+  `timestamp` bigint(20) NOT NULL,
+  `log_type` char(10) NOT NULL DEFAULT '',
+  `log_contents` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `menu`
+--
+
+CREATE TABLE IF NOT EXISTS `menu` (
+`id` int(11) NOT NULL,
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `parent` varchar(50) NOT NULL,
+  `topic` varchar(50) NOT NULL,
+  `link` varchar(50) NOT NULL,
+  `permid` int(11) NOT NULL DEFAULT '0',
+  `config` varchar(255) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `menu`
+--
+
+INSERT INTO `menu` (`id`, `priority`, `parent`, `topic`, `link`, `permid`, `config`) VALUES
+(170, 100, 'top', 'menu_overview', 'home.php', 0, ''),
+(171, 200, 'top', 'menu_logs', 'logs/logs.php', 2, 'FEATURE_LOGS_ENABLE'),
+(172, 300, 'top', 'menu_domains', 'domains/domains.php', 2, ''),
+(173, 301, 'menu_domains', 'menu_domains_view', 'domains/domains.php', 2, ''),
+(174, 302, 'menu_domains', 'menu_domains_add', 'domains/add.php', 2, ''),
+(175, 310, 'menu_domains_view', '', 'domains/view.php', 2, ''),
+(176, 310, 'menu_domains_view', '', 'domains/records.php', 2, ''),
+(177, 310, 'menu_domains_view', '', 'domains/delete.php', 2, ''),
+(178, 500, 'top', 'menu_servers', 'servers/servers.php', 2, ''),
+(179, 501, 'menu_servers', 'menu_servers_view', 'servers/servers.php', 2, ''),
+(180, 502, 'menu_servers', 'menu_servers_add', 'servers/add.php', 2, ''),
+(181, 510, 'menu_servers_view', '', 'servers/view.php', 2, ''),
+(182, 510, 'menu_servers_view', '', 'servers/logs.php', 2, ''),
+(183, 510, 'menu_servers_view', '', 'servers/delete.php', 2, ''),
+(184, 900, 'top', 'menu_configuration', 'admin/config.php', 2, ''),
+(185, 320, 'menu_domains', 'menu_domains_import', 'domains/import.php', 2, ''),
+(186, 503, 'menu_servers', 'menu_servers_groups', 'servers/groups.php', 2, ''),
+(187, 520, 'menu_servers_groups', 'menu_servers_groups_view', 'servers/groups.php', 2, ''),
+(188, 521, 'menu_servers_groups', 'menu_servers_groups_add', 'servers/group-add.php', 2, ''),
+(189, 521, 'menu_servers_groups_view', '', 'servers/group-view.php', 2, ''),
+(190, 521, 'menu_servers_groups_view', '', 'servers/group-delete.php', 2, ''),
+(191, 920, 'top', 'menu_admin_users', 'user/users.php', 3, 'AUTH_METHOD=sql'),
+(192, 921, 'menu_admin_users', '', 'user/user-view.php', 3, 'AUTH_METHOD=sql'),
+(193, 921, 'menu_admin_users', '', 'user/user-permissions.php', 3, 'AUTH_METHOD=sql'),
+(194, 921, 'menu_admin_users', '', 'user/user-delete.php', 3, 'AUTH_METHOD=sql'),
+(195, 921, 'menu_admin_users', '', 'user/user-add.php', 3, 'AUTH_METHOD=sql');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `name_servers`
+--
+
+CREATE TABLE IF NOT EXISTS `name_servers` (
+`id` int(11) NOT NULL,
+  `id_group` int(11) NOT NULL DEFAULT '1',
+  `server_primary` tinyint(1) NOT NULL DEFAULT '0',
+  `server_record` tinyint(1) NOT NULL DEFAULT '0',
+  `server_name` varchar(255) NOT NULL DEFAULT '',
+  `server_description` text NOT NULL,
+  `server_type` varchar(20) NOT NULL DEFAULT '',
+  `api_auth_key` varchar(255) NOT NULL DEFAULT '{{ api_auth_key }}',
+  `api_sync_config` bigint(20) NOT NULL DEFAULT '0',
+  `api_sync_log` bigint(20) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `name_servers_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `name_servers_groups` (
+`id` int(10) unsigned NOT NULL,
+  `group_name` varchar(255) CHARACTER SET ucs2 NOT NULL,
+  `group_description` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `name_servers_groups`
+--
+
+INSERT INTO `name_servers_groups` (`id`, `group_name`, `group_description`) VALUES
+(1, 'default', 'Default Nameserver Group');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `permissions` (
+`id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Stores all the possible permissions';
+
+--
+-- Dump dei dati per la tabella `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `value`, `description`) VALUES
+(1, 'disabled', 'Enabling the disabled permission will prevent the user from being able to login.'),
+(2, 'namedadmins', 'Full management over domains, records and application defaults.'),
+(3, 'admin', 'Allows configuration of user accounts');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+`id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL DEFAULT '',
+  `realname` varchar(255) NOT NULL DEFAULT '',
+  `password` varchar(255) NOT NULL DEFAULT '',
+  `password_salt` varchar(20) NOT NULL DEFAULT '',
+  `contact_email` varchar(255) NOT NULL DEFAULT '',
+  `time` bigint(20) NOT NULL DEFAULT '0',
+  `ipaddress` varchar(255) NOT NULL DEFAULT ''
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='User authentication system.';
+
+--
+-- Dump dei dati per la tabella `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `realname`, `password`, `password_salt`, `contact_email`, `time`, `ipaddress`) VALUES
+(1, 'admin', 'SysAdmin', 'e86b576fa4b968b283088c91daf62e8499fb1ca1', 'dxzvxz8e9qsg88qqi8cb', 'admin@dns.nnxx', 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users_blacklist`
+--
+
+CREATE TABLE IF NOT EXISTS `users_blacklist` (
+`id` int(11) NOT NULL,
+  `ipaddress` varchar(255) NOT NULL,
+  `failedcount` int(11) NOT NULL DEFAULT '0',
+  `time` bigint(20) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Prevents automated login attacks.';
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users_options`
+--
+
+CREATE TABLE IF NOT EXISTS `users_options` (
+`id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users_permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `users_permissions` (
+`id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `permid` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Stores user permissions.';
+
+--
+-- Dump dei dati per la tabella `users_permissions`
+--
+
+INSERT INTO `users_permissions` (`id`, `userid`, `permid`) VALUES
+(1, 1, 2),
+(2, 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users_sessions`
+--
+
+CREATE TABLE IF NOT EXISTS `users_sessions` (
+`id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `authkey` varchar(40) NOT NULL,
+  `ipv4` varchar(15) NOT NULL DEFAULT '',
+  `ipv6` varchar(255) NOT NULL DEFAULT '',
+  `time` bigint(20) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `cloud_zone_map`
+--
+ALTER TABLE `cloud_zone_map`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `config`
+--
+ALTER TABLE `config`
+ ADD PRIMARY KEY (`name`);
+
+--
+-- Indexes for table `dns_domains`
+--
+ALTER TABLE `dns_domains`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dns_domains_groups`
+--
+ALTER TABLE `dns_domains_groups`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dns_records`
+--
+ALTER TABLE `dns_records`
+ ADD PRIMARY KEY (`id`), ADD KEY `id_domain` (`id_domain`);
+
+--
+-- Indexes for table `dns_record_types`
+--
+ALTER TABLE `dns_record_types`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `file_uploads`
+--
+ALTER TABLE `file_uploads`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `file_upload_data`
+--
+ALTER TABLE `file_upload_data`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `journal`
+--
+ALTER TABLE `journal`
+ ADD PRIMARY KEY (`id`), ADD KEY `journalname` (`journalname`);
+
+--
+-- Indexes for table `language`
+--
+ALTER TABLE `language`
+ ADD PRIMARY KEY (`id`), ADD KEY `language` (`language`), ADD KEY `label` (`label`);
+
+--
+-- Indexes for table `language_avaliable`
+--
+ALTER TABLE `language_avaliable`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `logs`
+--
+ALTER TABLE `logs`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menu`
+--
+ALTER TABLE `menu`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `name_servers`
+--
+ALTER TABLE `name_servers`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `name_servers_groups`
+--
+ALTER TABLE `name_servers_groups`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+ ADD PRIMARY KEY (`id`), ADD KEY `ipaddress` (`ipaddress`), ADD KEY `time` (`time`);
+
+--
+-- Indexes for table `users_blacklist`
+--
+ALTER TABLE `users_blacklist`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users_options`
+--
+ALTER TABLE `users_options`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users_permissions`
+--
+ALTER TABLE `users_permissions`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users_sessions`
+--
+ALTER TABLE `users_sessions`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `cloud_zone_map`
+--
+ALTER TABLE `cloud_zone_map`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `dns_domains`
+--
+ALTER TABLE `dns_domains`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `dns_domains_groups`
+--
+ALTER TABLE `dns_domains_groups`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `dns_records`
+--
+ALTER TABLE `dns_records`
+MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `dns_record_types`
+--
+ALTER TABLE `dns_record_types`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT for table `file_uploads`
+--
+ALTER TABLE `file_uploads`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `file_upload_data`
+--
+ALTER TABLE `file_upload_data`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `journal`
+--
+ALTER TABLE `journal`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `language`
+--
+ALTER TABLE `language`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=433;
+--
+-- AUTO_INCREMENT for table `language_avaliable`
+--
+ALTER TABLE `language_avaliable`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `logs`
+--
+ALTER TABLE `logs`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `menu`
+--
+ALTER TABLE `menu`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=196;
+--
+-- AUTO_INCREMENT for table `name_servers`
+--
+ALTER TABLE `name_servers`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `name_servers_groups`
+--
+ALTER TABLE `name_servers_groups`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `users_blacklist`
+--
+ALTER TABLE `users_blacklist`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `users_options`
+--
+ALTER TABLE `users_options`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=181;
+--
+-- AUTO_INCREMENT for table `users_permissions`
+--
+ALTER TABLE `users_permissions`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `users_sessions`
+--
+ALTER TABLE `users_sessions`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+
+
+GRANT USAGE ON *.* TO '{{ db_user }}'@'%' IDENTIFIED BY '{{ db_pass }}' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0;
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON `{{ db_name }}` . * TO '{{ db_user }}'@'%';
+
+

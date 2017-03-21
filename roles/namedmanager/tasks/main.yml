@@ -1,0 +1,129 @@
+- name: 1. Creo la directory {{ path_namedmanager }}
+  file:
+    path: "{{ path_namedmanager }}"
+    state: directory
+
+- name: 2. Aggiorno NamedManagerdal repo git
+  git:
+    repo: "{{ namedmanager_source_repo }}"
+    dest: "/tmp/namedmanager"
+
+- name: 3. Copio la directory htdocs
+  command: "cp -R /tmp/namedmanager/htdocs {{ path_namedmanager }}"
+
+#[- name: # Copio il file sql
+#  copy:
+#    src: "sql/install.sql"
+#    dest: "/tmp"
+
+- name: Create DB
+  mysql_db:
+     name: "{{ db_name }}"
+     state: present
+
+- name: Copy database dump file
+  template:
+     src: "install.sql.j2"
+     dest: "/tmp/db_install_namedmanager.sql"
+
+- name: Restore database
+  mysql_db:
+     name: "{{ db_name }}"
+     state: import
+     target: "/tmp/db_install_namedmanager.sql"
+
+
+#- name: 4. Installo il Database
+#  mysql_db:
+#    state: import
+#    name: all
+#    target: "/tmp/install.sql"
+
+- name: 5. Creo la directory di config in {{ path_config }}
+  file:
+    path: "{{ path_config }}"
+    state: directory
+
+- name: 6. Copio il file di config per il database
+  template:
+    src: "sample-config.php.j2"
+    dest: "{{ path_config }}/config.php"
+
+- name: 6a. Creo un symlink del file di config del database
+  file:
+    src: "{{ path_config }}/config.php"
+    dest: "{{ path_namedmanager }}/htdocs/include/config-settings.php"
+    state: link
+
+- name: 7. Copio il file di configurazione per Apache2
+  template:
+    src: "namedmanager-httpdconfig.conf.j2"
+    dest: "/etc/apache2/conf-available/namedmanager.conf"
+
+- name: #7a. Abilito il file di configurazione di apache
+  command: "a2enconf namedmanager"
+  
+- name: 8. Abilito il default virtualhost SSL
+  command: "a2ensite default-ssl"
+  notify:
+  - restart apache2
+
+- name: 9. Abilito il crontab per route53
+  template:
+    src: "namedmanager-www.cron.j2"
+    dest: "/etc/cron.d/namedmanager-www"
+
+- name: 10. Creo la directory di log
+  file:
+    path: "/var/log/namedmanager"
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: 11. Configuro bind con namedmanager
+  copy:
+    src: "bind"
+    dest: "/etc/"
+    owner: bind
+    group: bind
+
+- name: #11a. config bind
+  template:
+    src: "bind-sample-config.php.j2"
+    dest: "{{ path_config }}/config-bind.php"
+
+- name: #11b. create symlink
+  file:
+    src: "{{ path_config }}/config-bind.php"
+    dest: "/etc/bind/include/config-settings.php"
+    state: link
+
+- name: 12. Copio il crontab di namedmanager
+  template:
+    src: "namedmanager-bind.cron.j2"
+    dest: "/etc/cron.d/namedmanager-bind"
+
+- name: 13. Installo il BootScript
+  copy:
+    src: "resources/namedmanager_logpush.rcsysinit"
+    dest: "/etc/init.d/namedmanager_logpush"
+    mode: 0775
+
+- name: 14. Copio il BootScript service
+  copy:
+    src: "resources/namedmanager-logpush.service"
+    dest: "/lib/systemd/system/namedmanager-logpush.service"
+  notify:
+   - restart namedmanager_logpush
+
+- systemd:
+    name: "namedmanager-logpush"
+    enabled: yes
+
+- name: #set atribute 
+  file:
+    path: "{{ dir_bind }}/named.namedmanager.conf"
+    owner: bind
+    group: bind
+    mode: 0664
+

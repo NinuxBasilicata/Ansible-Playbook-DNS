@@ -1,0 +1,17 @@
+---
+# defaults variables for namedmanager
+path_namedmanager: '/opt/namedmanager'
+path_config: '/etc/namedmanager'
+dir_bind: '/etc/bind'
+log_namedmanager: '/var/log/namedmanager'
+namedmanager_source_repo: https://github.com/mikysal78/namedmanager.git
+
+#db_host: "localhost"
+#db_name: "namedmanager"
+#db_user: "namedmanager"
+#db_pass: "ninux"   
+
+
+#api_url: "http://10.27.0.120/namedmanager"
+#api_server_name: "test.nnxx"
+#api_auth_key: "ninux"

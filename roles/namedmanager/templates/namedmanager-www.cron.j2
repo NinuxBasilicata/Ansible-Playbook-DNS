@@ -1,0 +1,4 @@
+# NAMEDMANAGER CRONJOBS
+# Synchronise any changes to Route53
+*/1 * * * * www-data cd {{ path_namedmanager }}/htdocs/include/cron/; php -q route53.php >> {{ log_namedmanager }}/cron-route53 2>&1
+

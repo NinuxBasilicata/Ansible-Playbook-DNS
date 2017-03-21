@@ -1,0 +1,6 @@
+- name: restart apache2
+  service: name=apache2 state=restarted
+
+- name: restart namedmanager_logpush
+  service: name=namedmanager_logpush state=restarted
+
