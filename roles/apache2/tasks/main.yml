@@ -72,8 +72,6 @@
 
 - name: enabled rewrite
   apache2_module: name=rewrite state=present
-  notify:
-   - restart apache2
 - name: enabled suexec
   apache2_module: name=suexec state=present
 - name: enabled suexec
@@ -91,11 +89,6 @@
 
 - name: Install PHPMyAdmin
   apt: pkg=phpmyadmin state=installed
-#  file:
-#    src: /etc/phpmyadmin/apache.conf
-#    dest: /etc/apache2/conf-enabled/phpmyadmin.conf
-#    state: link
-#  notify: restart apache2
 
 - file:
     src: /etc/phpmyadmin/apache.conf
