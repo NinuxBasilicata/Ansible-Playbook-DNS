@@ -16,19 +16,22 @@ Roles
 Il Playbook contiene le seguenti roles:
 
 - common
-  This role contain all the common package/ configuration and utils needed by ANY system
+  Installazione/Configurazione di base per il sistema operativo
 
 - bind
   Server DNS con TLD .nnxx preconfigurato e zona di reverse /16
 
 - database
-  Installazione di MariaDB
+  Installazione di MariaDB (non ha password di root), preferibile eseguire successivamente il comando
+~~~
+mysql_secure_installation
+~~~
+
+- webserver
+  Installazione di Apache2, PHP5 e PhpMyAdmin base.
 
 - NamedManager
   Installazione di NamedManager: gestione di un server BIND tramite interfaccia Web.
-
-- webserver
-  Installazione di Apache2 e PhpMyAdmin
 
 
 
@@ -43,20 +46,18 @@ Define groups between brackets:
 
     [<type>]
 
-Add below the group you created your host with IP address or hostname. If you have hosts that use a non-standard SSH port, you can put the port number after the hostname with a colon:
+Esempio
 
 ::
 
 	# file: hosts
 
-	[<type>]
-	192.168.78.15:22022
-	example.com
+        [DNS]
+        test.nnxx ansible_user=michele ansible_port=2400 ansible_host=10.27.0.120
+
 
 Defining playbooks
 ------------------
-
-On file namedmanager.yml every group have its own subset of roles that defines what kind of task ansible must execute for every host
 
 ::
 
@@ -69,6 +70,7 @@ On file namedmanager.yml every group have its own subset of roles that defines w
         - bind
         - database
         - apache2
+        - namedmanager
       vars:
         # common
         common_ipv4_forward: 1
@@ -78,6 +80,20 @@ On file namedmanager.yml every group have its own subset of roles that defines w
           - name: michele
             authorized:
               - ./keys/michele.pub
+        # bind
+        tld: 'nnxx'
+        hostmaster: 'admin.basilicata.nnxx'
+        nameservers_hosts:
+           ns1:
+             ip: '10.27.0.120'
+        # namedmanager
+        db_host: "localhost"
+        db_name: "namedmanager"
+        db_user: "namedmanager"
+        db_pass: "ninux"
+        api_url: "http://10.27.0.120/namedmanager"
+        api_server_name: "test.nnxx"
+        api_auth_key: "ninux"
 
 
 Every role has a directory where tasks, templates, handlers and variables are defined. For more informations see https://docs.ansible.com/index.html
@@ -100,14 +116,8 @@ Deploy of a new server:
 
   ansible-playbook -i hosts namedmanager.yml -ku <user> -e "sudo=no" -l <server-name>
 
-Just run tasks with specific tag:
+Se sul server hai gia' installato sudo ed hai una chiave ssh installata puoi usare
 
 ::
 
-  ansible-playbook -i hosts namedmanager.yml -t "<tag1>,<tag2>,...,<tagN>"
-
-Or run task without certain tasks
-
-::
-
-  ansible-playbook -i hosts namedmanager.yml --skip-tags "<tag1>,<tag2>,...,<tagN>"
+  ansible-playbook -i hosts namedmanager.yml -l DNS
