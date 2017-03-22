@@ -1,6 +1,7 @@
 # Ansible NamedManager for Debian
 
-[![N|Solid](http://basilicata.ninux.org/images/Logo_Ninux_Basilicata_600-192.png)](http://basilicata.ninux.org)
+.. image:: http://basilicata.ninux.org/images/Logo_Ninux_Basilicata_600-192.png
+   :target: http://basilicata.ninux.org
 
 Ansile NamedManager è uno playbook ansible che incoropora varie roles con: 
   - Common (installazione di base)
