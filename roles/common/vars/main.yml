@@ -9,7 +9,7 @@ packages:
   - nyancat
   - screen
   - software-properties-common
-  - python-software-properties
+#  - python-software-properties
   - unattended-upgrades
   - vim
   - wget

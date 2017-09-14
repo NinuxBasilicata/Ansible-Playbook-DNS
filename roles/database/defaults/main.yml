@@ -1,5 +1,6 @@
 debian:
-    version: jessie
+#    version: jessie
+    version: stretch
 mariadb:
-    series_version: '10.0'
+    series_version: '10.1'
 
