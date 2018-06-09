@@ -1,2 +1,2 @@
 [DNS]
-test.nnxx ansible_user=michele ansible_port=2400 ansible_host=10.27.0.120
+dns-2.basilicata.ninux ansible_user=root ansible_port=22 ansible_host=10.27.0.6

@@ -8,7 +8,8 @@ packages:
   - apache2-utils
   - libexpat1
   - ssl-cert
-  - libapache2-mod-php5
+  - libapache2-mod-php7.0
+  - certbot
   - libapache2-mod-fcgid
   - apache2-suexec
   - mcrypt

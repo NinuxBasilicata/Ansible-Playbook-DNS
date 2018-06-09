@@ -1,0 +1,5 @@
+- hosts: PDL
+  become: "{{ sudo | default('yes') }}"
+  roles:
+    - common
+
