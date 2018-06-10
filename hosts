@@ -1,2 +1,2 @@
 [DNS]
-dns-2.basilicata.ninux ansible_user=root ansible_port=22 ansible_host=10.27.0.6
+dns.nnxx ansible_user=root ansible_port=22 ansible_host=10.20.30.40

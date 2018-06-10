@@ -83,7 +83,7 @@
   apache2_module: name=cgi state=present
 
 - name: Install PHPMyAdmin
-  apt: pkg=phpmyadmin state=installed
+  apt: pkg=phpmyadmin state=present
 
 - file:
     src: /etc/phpmyadmin/apache.conf

@@ -20,14 +20,14 @@
     hostmaster: 'admin.basilicata.nnxx'
     nameservers_hosts:
        ns1:
-         ip: '10.27.0.6'
+         ip: '10.20.30.40'
     # namedmanager
     db_host: "localhost"
     db_name: "namedmanager"
     db_user: "namedmanager"
     db_pass: "ninux"
-    api_url: "http://10.27.0.6/namedmanager"
-    api_server_name: "test.nnxx"
-    api_auth_key: "ninux2"
+    api_url: "http://10.20.30.40/namedmanager"
+    api_server_name: "dns.nnxx"
+    api_auth_key: "ninux"
 
 
