@@ -1,11 +1,12 @@
-#!/bin/sh
-#
-# namedmanager_logpush		Delivers logs from Named (via syslog) back to NamedManager
-#
-# chkconfig:	2345 87 9
-# description:	namedmanager_logpush process
-#
-
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          namedmanager_logpush Delivers logs from Named (via syslog) back to NamedManager
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: namedmanager_logpush process
+### END INIT INFO
 
 # Source function library.
 . /lib/lsb/init-functions
